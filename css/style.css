@@ -211,6 +211,18 @@ audio {
     max-width: 70rem;
 }
 
+#figure-wrapper_full {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+#figure-wrapper_full img {
+    width: 100%;
+    max-width: 90rem;
+}
+
 .video-wrapper {
     display: flex;
     justify-content: center;
