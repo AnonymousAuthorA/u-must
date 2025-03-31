@@ -50,7 +50,18 @@
     <h3 id="i2a">Image-to-Audio (I2A)</h3>
     <span><a href="#toc">[top]</a></span>
   </div>
-  <p>Our model demonstrates the first successful implementation of direct score-image-to-audio translation (Image RVQ tokens to Audio RVQ tokens). Below are inference results from two models (one trained for OMR and image-to-audio, and one trained for OMR, I2A, and MIDI-to-audio) on two datasets.</p>
+
+  <div class="video-wrapper">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/UadAHXboq3w?si=ptYxMFxpmKyJ4-U9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <p>
+    Our model demonstrates the first successful implementation of direct score-image-to-audio translation (Image RVQ tokens to Audio RVQ tokens). The above video illustrates the model's attention activation during inference. The upper section shows the original sheet music notation (processed with 16px * 16px image tokens), and the lower section the attention matrix during audio generation. The clear diagonal pattern demonstrates how our model systematically processes the notation from left to right while generating corresponding performance audio.
+  </p>
+
+  <br>
+  
+  <p>Shown below are full inference results from two models (one trained for OMR and image-to-audio, and one trained for OMR, I2A, and MIDI-to-audio) on two datasets.</p>
 
   <div class="audio-table">
     <table>
