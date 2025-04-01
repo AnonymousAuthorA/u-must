@@ -39,12 +39,12 @@
 
     <quote>Table 4: If I understand correctly, the A2I model is barely better-than-random? </quote>
 
-    <p>We deeply appreciate the reviewer's suggestion and agree that measuring the SER was not effective to evaluate the current performance of A2I model. Following the reviewer’s suggestion, we calculated another metric, earth mover’s distance to measure the similarity between the generated sheet image and original target score. The explanation and result is provided in our response to the Reviewer c5pW.</p>
+    <p>We agree that SER was not effective for evaluating the performance of the current A2I model. We employed another metric, Earth Mover’s Distance, to compare token distributions between the generated sheet music and original images. The evaluation results are provided <a href="#a2i-eval">here</a>.</p>
 
     <quote>L295, Col. 2: How many epochs does 600k batches correspond to?</quote>
-    <p>Briefly, we present the epoch in our full training setting. Please note that AMT dataset (MAESTRO, MusicNet, SLakh) epoch does not consider that only the segment (10s or 20s) of data sample is used for each epoch. For example, MAESTRO’s average length is about 600 seconds, which will need at least 60 epochs to expect full segment to be included in the training. </p>
-    Trained on OMR + I2A + M2D : Olimpic 85.58 / Grandstaff 57.05 / YTSV-Piano 39.74 / MAESTRO 2285.42
-    Trained on AMT + A2I + L2I: maestro 2765.78 / musicnet 5531.56 / slakh 1382.89 / olimpic 56.66 / grandstaff 45.33 / YTSV 15.16
+    <p>Below are brief calculations of epoch numbers in our full training setting. Please note that in the AMT datasets (MAESTRO, MusicNet, SLakh) the epoch number does not reflect that only a randomly sliced segment (10s or 20s) of data sample is used for each step. For example, the average audio length in MAESTRO is around 600 seconds, which means we may need at least 60 epochs to expect the full data to be involved in training. </p>
+    <p><strong>Trained on OMR + I2A + Midi2Audio</strong>: Olimpic 85.58 / GrandStaff 57.05 / YTSV-Piano 39.74 / MAESTRO 2285.42</p>
+    <p><strong>Trained on AMT + A2I + LMX2Img</strong>: MAESTRO 2765.78 / MusicNet 5531.56 / slakh 1382.89 / olimpic 56.66 / grandstaff 45.33 / YTSV 15.16</p>
 
 
     <quote>Questions For Authors:
@@ -58,28 +58,26 @@
     </quote>
 
     <p>We first filtered out handwritten scores using thumbnails, and later applied systematic filtering with ResNet50 embeddings, t-SNE, and DBSCAN. Low-quality scans and manipulated scores (e.g., inverted colors, X marks) were excluded using pixel intensity thresholds and anomaly scores (Appendix A.5.1).
-    Regarding duplication, while some pages may repeat (e.g., musical repetitions or multiple versions of the same piece), we believe the risk is relatively low. YouTube reuploads are less common than image duplication, and we manually curated trusted channels with mostly original content. Overlaps in famous repertoire likely reflect multiple performances of the same score rather than copied videos.
-    We will include these details in the camera-ready version.</p>
-
+    Regarding duplication, while some pages may repeat (e.g., musical repetitions or multiple versions of the same piece), we believe the risk is relatively low. YouTube reuploads are less common than image duplication, and we manually curated channels with mostly original content. Overlaps in famous repertoire likely reflect multiple performances of the same score rather than copied videos. We will include these details in the camera-ready version.</p>
 
     <quote>How does a model know which modality to output?</quote>
-    <p>- We add out-modal-specific embedding for every input token embedding. Also, the decoder’s <start> token is modal specific. We will include this detail in the final revision. </p>
+    <p>We add output modality-specific embeddings for every input token embedding, and the decoder’s START token is also modality specific. We will include this detail in the final revision.</p>
 
     <quote>How is sample quality impacted if we do image-to-audio translation in multiple stages? I.e. how does F1 and FAD (Table 3) change if we leverage the unified model to first translate image->XML and then XML->audio?</quote>
 
-    <p>We added the suggested result on our respond to Reviewer gn9S, named as “Multi Stage (Image-to-Xml to MIDI-to-Audio): Trained on OMR + I2A + M2A”.  Although the F1 score showed better result, the FAD was significantly worse. One of the reasons is that OMR’s errors such as missing accidentals or confusing note pitch can lead to severe dissonance, although it does not much affect AMT F1 score. We believe that this is another advantage of the end-to-end approach, as the model can avoid making such severe mistakes in optical music recognition that can lead to dissonance while directly predicting the audio.</p>
+    <p>We added the suggested result in our response to Reviewer gn9S, and <a href="#i2a-bpsd-eval">this table</a>, denoted as “Multi Stage (Image-to-Xml to MIDI-to-Audio): Trained on OMR + I2A + M2A”. Although F1-score showed better results, FAD was significantly worse. One reason is that errors in OMR such as missing accidentals or mis-transcribed note pitches can lead to severe dissonance, while not affecting AMT F1-scores as much. We believe this is another advantage of the end-to-end approach, as it eliminates additional steps where error accumulation can occur.</p>
 
     <quote>L121: “we mainly focus on automatic music transcription and optical music recognition, the key representative tasks in each direction” — Why are AMT and OMR the key representative tasks in each modality direction?</quote>
 
-    <p>We would modify that AMT and OMR are the fundamental tasks that identify notes from the given input, which is essential for following modal transitions. Also they are the tasks with most well-established evaluation metrics.</p>
+    <p>AMT and OMR are "representative" in that they're the most fundamental tasks that identify and extract note information in each direction; they also have most well-established evaluation metrics. We could word this sentence again to be less assertive.</p>
 
     <quote>Table 1 and the sentence right after disagree on the total number of videos: Is it 10,706 or 12,217?</quote>
 
-    <p>We apologize for making a confusion. 12,217 is the right number. We will correct the sentence in the final revision.</p>
+    <p>We apologize for this oversight. 12,217 is the right number. We will correct the sentence in the final revision.</p>
 
     <quote>L298, Col. 2: What is the motivation for using a curriculum learning strategy? A priori, I would have concerns about loss of plasticity when adding a certain modality only part way through training. What would happen if we were to train on all modalities straight from the beginning?</quote>
 
-    <p>Following the reviewer’s suggestion, we ran additional experiments with training on all modalities straight from the beginning. The model’s training loss suddenly exploded in 150k. The validation metrics (loss of each modality and OMR SER) were all much higher than the similar training step of other models with curriculum. </p>
+    <p>Following the reviewer’s suggestion, we ran additional experiments where we train on all modalities straight from the beginning. Here, the training loss suddenly explodes at around 150k steps. The validation metrics (loss of each modality and OMR SER) were all worse as well.</p>
 
     <quote>Which tasks and datasets is the A2I model from Section 6.2 trained on?</quote>
 
@@ -109,7 +107,7 @@
     <span><a href="#eval">[top]</a></span>
   </div>
 
-  <p>A2I results from three different models, evaluated with Earth Mover's Distance (EMD).</p>
+  <p>A2I results from three different models, evaluated with Earth Mover's Distance (EMD). This compares how similar the pitch and duration tokens' distributions are with the ground truth distribution. LMX tokens were predicted from generated images using the Zeus OMR model.</p>
 
   <div class="center-table">
     <table>
@@ -159,7 +157,7 @@
     <span><a href="#eval">[top]</a></span>
   </div>
 
-  <p>I2A results from five strategies on the Beethoven Piano Sonata Dataset (BPSD). To quantitatively evaluate I2A performance, we transcribe the output audio with the Onsets and Frames model, align the transcribed frames with ground truth MIDI using DTW, and assess F1-scores in three different thresholds. We also use Frechet Audio Distance (FAD) as a general audio quality metric.</p>
+  <p>I2A results from five strategies on the Beethoven Piano Sonata Dataset (BPSD). To quantitatively evaluate I2A performance, we transcribe the output audio with the Onsets and Frames model, align the transcribed frames with ground truth MIDI using DTW, and assess F1-scores across 3 different tolerance windows (e.g., a tolerance of 0.1 means that a predicted note is considered correct if it falls within ±0.1 seconds of the ground truth). We also use Frechet Audio Distance (FAD) as a general audio quality metric.</p>
 
   <br>
 
@@ -277,15 +275,15 @@
     <span><a href="#eval">[top]</a></span>
   </div>
   
-  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation.</p>
+  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation without DTW.</p>
 
   <div class="center-table">
     <table>
       <tr>
         <th class="label-lg bb">Model Description</th>
-        <th class="label-lg bb">F1 (DTW) 0.05</th>
-        <th class="label-lg bb">F1 (DTW) 0.1</th>
-        <th class="label-lg bb">F1 (DTW) 0.2</th>
+        <th class="label-lg bb">F1 0.05</th>
+        <th class="label-lg bb">F1 0.1</th>
+        <th class="label-lg bb">F1 0.2</th>
         <th class="label-lg bb">FAD</th>
       </tr>
       <tr>
@@ -336,6 +334,8 @@
   <div class="video-wrapper">
     <iframe width="720" height="480" src="https://www.youtube.com/embed/UadAHXboq3w?si=ptYxMFxpmKyJ4-U9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
+
+  <p id="caption">Attention Visualization in direct I2A</p>
 
   <p>
     Our model demonstrates the first successful implementation of direct score-image-to-audio translation (Image RVQ tokens to Audio RVQ tokens). The above video illustrates the model's attention activation during inference. The upper section shows the original sheet music notation (processed with 16px * 16px image tokens), and the lower section the attention matrix during audio generation. The clear diagonal pattern demonstrates how our model systematically processes the notation from left to right while generating corresponding performance audio.
