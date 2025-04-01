@@ -15,6 +15,30 @@
 
   <p id="authors">Anonymous Submission</p>
 
+  <div class="response-wrapper">
+    <h2 id="response">Response to Reviewer MkS7</h2>
+    <p id="disclamer">We couldn't post the rebuttal for reviewer MkS7 before the author response deadline while trying to reduce down to fit the maximum length allowed in OpenReview. We sincerely apologize for this, and would like to post the response here instead.</p>
+
+    <p>We sincerely thank the reviewer for the detailed feedbacks and helpful suggestions. In overall, we acknowledge that many of our sentences overclaim without strong evidence, so we would revise those arguments as following the reviewer’s suggestion, along with clarifying the limitation of the proposed YTSV dataset.</p>
+
+    <quote>Also in the Abstract (L32 ff.), it is claimed that “a unified model trained on multiple translation tasks outperforms task-specific models,” but this is not entirely accurate based on the results provided in the paper. While I think that the claim holds true for OMR specifically, it is not so clear for AMT, while the other directions (i.e. XML-to-image, image-to-audio, and MIDI-to-audio) have no comparison at all.</quote>
+
+    <p>We added results for other tasks to compare with task-specific models, such as Image-to-audio-only, and MIDI-to-audio only. Due to the length limitation, we would like to ask reviewers to refer our respond to other reviewers. We’ll also modify our sentence to “a unified model trained on multiple translations tasks outperforms task-specific models on some tasks” to avoid overclaim.</p>
+    
+    <quote>Related to the above point is the image-to-audio task, for which it is claimed that “the model only trained for image-to-audio fails to generate meaningful audio” (L349, Col. 2). While this may be true, it should manifest in a drastic difference in the quantitative numbers reported in Table 3.</quote>
+    
+    <p>We appreciate the reviewer’s suggestion. We added additional quantitative evaluation results further down this demo page. The result from the image-to-audio-only model shows significant differences with other models. This suggests that encompassing other modality translations during training is essential for image-to-audio performance. </p>
+    
+    <quote>Is it better to train a single end-to-end/unified model or do we get the best performance if we split the task into smaller, more manageable sub-tasks? Or, is it really better to go from image directly to audio rather than to have an intermediate symbolic representation?</quote>
+    
+    <p>We acknowledge the reviewer’s criticism of the lack of comparison with multi-stage approaches. We have attached new comparisons between multi-stage and end-to-end strategies in image-to-audio generation, provided <a href="#i2a-bpsd-eval">here</a>.</p>
+    
+    <quote>For the AMT task, the addition of auxiliary tasks does not seem to improve performance, which is attributed to the already-sufficient extent of the audio-to-MIDI training data (L402 ff., Col. 2). This hypothesis could be tested by artificially reducing the audio-to-MIDI training data to an amount where the auxiliary data would be helpful.</quote>
+    
+    <p>We appreciate the reviewer’s suggestion. We are currently training a model only with MusicNet, and plan to revise our argument based on the updated experiment result.</p>
+  
+  </div>
+
   <p id="abstract">Abstract</p>
   <p>
     Music exists in various modalities, such as score images, symbolic scores, MIDI, and audio. Translations between each modality are established as core tasks of music information retrieval, such as automatic music transcription (audio-to-MIDI) and optical music recognition (score image to symbolic score). However, most past work on multimodal translation trains specialized models on individual translation tasks. Here, we propose a unified approach, where we train a general-purpose model on many translation tasks simultaneously. The viability of this approach is enabled by our newly presented 1,300 hours of paired audio-score image data collected from YouTube videos, which is an order of magnitude larger than any existing music modal translation datasets. By tokenizing continuous modalities like score images and audio using discrete autoencoders, we treat modal translation between images, music notation, MIDI, and audio as a discrete seq2seq problem and train a single encoder-decoder Transformer model. Our experimental results demonstrate that a unified model trained on multiple translation tasks outperforms task-specific models. Notably, our approach achieves the first successful score-image-conditioned audio generation, marking a significant breakthrough in cross-modal music generation. Additionally, our model achieves state-of-the-art performance in optical music recognition, showing the effectiveness of our unified framework.
