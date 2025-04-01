@@ -29,7 +29,7 @@
   <hr>
 
   <h2 id="eval">Additional Evaluation</h2>
-  <p>Following initial submission, we performed additional evaluation in Image-to-Audio and Audio-to-Image.</p>
+  <p>Following initial submission, we performed additional evaluation in Image-to-Audio, Audio-to-Image, and MIDI-to-Audio to provide more quantitative metrics for each task.</p>
 
   <div class="h3-wrapper">
     <h3 id="a2i-eval">Audio-to-Image (A2I)</h3>
@@ -151,7 +151,7 @@
   <br>
   
   <div class="h3-wrapper">
-    <h3 id="i2a-ytsv-eval">Image-to-Audio on YTSV-T11</h3>
+    <h3 id="i2a-ytsv-eval">Image-to-Audio (I2A) on YTSV-T11</h3>
     <span><a href="#eval">[top]</a></span>
   </div>
 
@@ -197,8 +197,45 @@
     </table>
   </div>
 
+  <br>
+
+  <div class="h3-wrapper">
+    <h3 id="m2a-eval">MIDI-to-Audio (M2A) on BPSD</h3>
+    <span><a href="#eval">[top]</a></span>
+  </div>
+  
+  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation.</p>
+
+  <div class="center-table">
+    <table>
+      <tr>
+        <th class="label-lg bb">Model Description</th>
+        <th class="label-lg bb">F1 (DTW) 0.05</th>
+        <th class="label-lg bb">F1 (DTW) 0.1</th>
+        <th class="label-lg bb">F1 (DTW) 0.2</th>
+        <th class="label-lg bb">FAD</th>
+      </tr>
+      <tr>
+        <td>M2A: Trained on MIDI2Audio only</td>
+        <td class="right">26.61</td>
+        <td class="right">64.86</td>
+        <td class="right"><strong>88.20</strong></td>
+        <td class="right">0.201</td>
+      </tr>
+      <tr>
+        <td class="bb">M2A: Trained on OMR + Image2Audio + MIDI2Audio</td>
+        <td class="right bb"><strong>45.91</strong></td>
+        <td class="right bb"><strong>69.54</strong></td>
+        <td class="right bb">84.55</td>
+        <td class="right bb"><strong>0.116</strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <br>
 
   <hr>
+
   <h2 id="toc">Inference Examples</h2>
 
   <p>Our multi-task, multimodal models successfully perform translation between four different modalities of music representation (score images, MusicXML, MIDI, and performance audio). Notably, we are the first to achieve end-to-end score-image-to-audio translation. As each modality highlight different aspects of music understanding, we find that the information learned for one translation task boosts performance for others.</p>
