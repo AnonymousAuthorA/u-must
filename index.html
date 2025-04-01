@@ -36,6 +36,55 @@
     <quote>For the AMT task, the addition of auxiliary tasks does not seem to improve performance, which is attributed to the already-sufficient extent of the audio-to-MIDI training data (L402 ff., Col. 2). This hypothesis could be tested by artificially reducing the audio-to-MIDI training data to an amount where the auxiliary data would be helpful.</quote>
     
     <p>We appreciate the reviewer’s suggestion. We are currently training a model only with MusicNet, and plan to revise our argument based on the updated experiment result.</p>
+
+    <quote>Table 4: If I understand correctly, the A2I model is barely better-than-random? </quote>
+
+    <p>We deeply appreciate the reviewer's suggestion and agree that measuring the SER was not effective to evaluate the current performance of A2I model. Following the reviewer’s suggestion, we calculated another metric, earth mover’s distance to measure the similarity between the generated sheet image and original target score. The explanation and result is provided in our response to the Reviewer c5pW.</p>
+
+    <quote>L295, Col. 2: How many epochs does 600k batches correspond to?</quote>
+    <p>Briefly, we present the epoch in our full training setting. Please note that AMT dataset (MAESTRO, MusicNet, SLakh) epoch does not consider that only the segment (10s or 20s) of data sample is used for each epoch. For example, MAESTRO’s average length is about 600 seconds, which will need at least 60 epochs to expect full segment to be included in the training. </p>
+    Trained on OMR + I2A + M2D : Olimpic 85.58 / Grandstaff 57.05 / YTSV-Piano 39.74 / MAESTRO 2285.42
+    Trained on AMT + A2I + L2I: maestro 2765.78 / musicnet 5531.56 / slakh 1382.89 / olimpic 56.66 / grandstaff 45.33 / YTSV 15.16
+
+
+    <quote>Questions For Authors:
+    > Details regarding filtering process (L206 ff.):
+    <ul>
+      <li>How are hand-written scores detected?</li>
+      <li>How are poor-quality scans and manipulated scores identified?</li>
+      <li>How (if at all) is deduplication handled?</li>
+      <li>Ideally covered in the appendix, but main text needs to refer to the relevant section</li>
+    </ul>
+    </quote>
+
+    <p>We first filtered out handwritten scores using thumbnails, and later applied systematic filtering with ResNet50 embeddings, t-SNE, and DBSCAN. Low-quality scans and manipulated scores (e.g., inverted colors, X marks) were excluded using pixel intensity thresholds and anomaly scores (Appendix A.5.1).
+    Regarding duplication, while some pages may repeat (e.g., musical repetitions or multiple versions of the same piece), we believe the risk is relatively low. YouTube reuploads are less common than image duplication, and we manually curated trusted channels with mostly original content. Overlaps in famous repertoire likely reflect multiple performances of the same score rather than copied videos.
+    We will include these details in the camera-ready version.</p>
+
+
+    <quote>How does a model know which modality to output?</quote>
+    <p>- We add out-modal-specific embedding for every input token embedding. Also, the decoder’s <start> token is modal specific. We will include this detail in the final revision. </p>
+
+    <quote>How is sample quality impacted if we do image-to-audio translation in multiple stages? I.e. how does F1 and FAD (Table 3) change if we leverage the unified model to first translate image->XML and then XML->audio?</quote>
+
+    <p>We added the suggested result on our respond to Reviewer gn9S, named as “Multi Stage (Image-to-Xml to MIDI-to-Audio): Trained on OMR + I2A + M2A”.  Although the F1 score showed better result, the FAD was significantly worse. One of the reasons is that OMR’s errors such as missing accidentals or confusing note pitch can lead to severe dissonance, although it does not much affect AMT F1 score. We believe that this is another advantage of the end-to-end approach, as the model can avoid making such severe mistakes in optical music recognition that can lead to dissonance while directly predicting the audio.</p>
+
+    <quote>L121: “we mainly focus on automatic music transcription and optical music recognition, the key representative tasks in each direction” — Why are AMT and OMR the key representative tasks in each modality direction?</quote>
+
+    <p>We would modify that AMT and OMR are the fundamental tasks that identify notes from the given input, which is essential for following modal transitions. Also they are the tasks with most well-established evaluation metrics.</p>
+
+    <quote>Table 1 and the sentence right after disagree on the total number of videos: Is it 10,706 or 12,217?</quote>
+
+    <p>We apologize for making a confusion. 12,217 is the right number. We will correct the sentence in the final revision.</p>
+
+    <quote>L298, Col. 2: What is the motivation for using a curriculum learning strategy? A priori, I would have concerns about loss of plasticity when adding a certain modality only part way through training. What would happen if we were to train on all modalities straight from the beginning?</quote>
+
+    <p>Following the reviewer’s suggestion, we ran additional experiments with training on all modalities straight from the beginning. The model’s training loss suddenly exploded in 150k. The validation metrics (loss of each modality and OMR SER) were all much higher than the similar training step of other models with curriculum. </p>
+
+    <quote>Which tasks and datasets is the A2I model from Section 6.2 trained on?</quote>
+
+    <p>The model was trained with the entire YTSV dataset that includes chamber music.</p>
+
   
   </div>
 
