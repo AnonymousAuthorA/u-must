@@ -229,3 +229,26 @@ audio {
     align-items: center;
     margin: 1rem 0;
 }
+
+.center-table {
+    width: 100%;
+    max-width: 70rem;
+    margin: 0 auto;
+}
+
+.center-table td,
+.center-table th {
+    padding: 0.5rem;
+}
+
+.bb {
+    border-bottom: 1px solid #aaa;
+}
+
+.right {
+    text-align: right;
+}
+
+strong {
+    font-weight: bold;
+}
