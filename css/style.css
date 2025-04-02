@@ -253,6 +253,13 @@ strong {
     font-weight: bold;
 }
 
+.m2a-input-col {
+  width: 33%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 .response-wrapper {
     background-color: #fff;
     border-radius: 0.5rem;
