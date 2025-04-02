@@ -161,7 +161,7 @@
 
   <br>
 
-  <p>In the "multi stage" strategies (Audio → MusicXML → MIDI → Audio), the intermediate modalities need to be translated. In the first (upper) experiment, we convert our model's OMR output (in MusicXML) to MIDI using conventional notation software and only use our own model for translation; in the second (lower) experiment, we employ existing pre-trained models to perform each translation step: Zeus for OMR, VirtuosoNet for performance modeling, and Music Spectrogram Diffusion for audio synthesis.</p>
+  <p>In the "multi stage" strategies (Image → MusicXML → MIDI → Audio), the intermediate modalities need to be translated. In the first (upper) experiment, we convert our model's OMR output (in MusicXML) to MIDI using conventional notation software and only use our own model for translation; in the second (lower) experiment, we employ existing pre-trained models to perform each translation step: Zeus for OMR, VirtuosoNet for performance modeling, and Music Spectrogram Diffusion for audio synthesis.</p>
 
   <br>
 
@@ -383,7 +383,51 @@
 
     </table>
   </div>
+    
+  <hr>
 
+  <div class="h3-wrapper">
+    <h3 id="i2a_multistage">Multi Stage Image-to-Audio (OMR -> M2A)</h3>
+    <span><a href="#toc">[top]</a></span>
+  </div>
+  <p>This is a comparison between direct end-to-end I2A and "multi stage" strategies. With `Ours multistage`, we convert our model's OMR output (in MusicXML) to MIDI using conventional notation software and only use our own model for MIDI-to-Audio translation. For `Zeus -> VirtuosoNet -> MSD`, we employ existing pre-trained models to perform each translation step: Zeus for OMR, VirtuosoNet for performance modeling, and Music Spectrogram Diffusion(MSD) for audio synthesis. We also added our model's direct Image-to-Audio result for comparison as `Ours direct I2A`.</p>
+
+  <div class="score-table" >
+    <table>
+      <tr>
+        <td colspan="2" class="table-header-dim input-col label-lg">Input</td>
+        <td colspan="3">
+          <img src="examples/I2A-multistage/i2a_multistage_input.png"/>
+        </td>
+      </tr>
+      <tr>
+        <td rowspan="4" class="table-header-dim label-lg">Output</td>
+        <td class="table-header table-header-dim label-md">Ground Truth</td>
+        <td colspan="3">
+          <audio controls> <source src="examples/I2A-multistage/i2a_multistage_gt.mp3" type="audio/mpeg"> </audio>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-header table-header-dim label-md">Ours direct I2A</td>
+        <td colspan="3">
+          <audio controls> <source src="examples/I2A-multistage/i2a_direct_ours.mp3" type="audio/mpeg"> </audio>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-header table-header-dim label-md">Ours multistage</td>
+        <td colspan="3">
+          <audio controls> <source src="examples/I2A-multistage/i2a_multistage_ours.mp3" type="audio/mpeg"> </audio>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-header table-header-dim label-md">Zeus -> VirtuosoNet -> MSD</td>
+        <td colspan="3">
+          <audio controls> <source src="examples/I2A-multistage/i2a_multistage_zeus_vnet_msd.mp3" type="audio/mpeg"> </audio>
+        </td>
+      </tr>
+    </table>
+  </div>
+    
   <hr>
 
   <div class="h3-wrapper">
