@@ -148,9 +148,12 @@
       </tr>
     </table>
   </div>
+
+  <br>
+    
+  <p>As additional tasks—such as AMT and LMX-to-Image—are incorporated into the training, the model’s performance continues to improve, suggesting that expanding the task scope has a synergistic effect on achieving more accurate pitch and duration distributions compared to the ground truth.</p>
   
   <br>
-
 
   <div class="h3-wrapper">
     <h3 id="i2a-bpsd-eval">Image-to-Audio (I2A) on BPSD</h3>
@@ -220,6 +223,14 @@
   </div>
 
   <br>
+    
+  <p>Comparing the three Direct I2A approaches, we see that adding more tasks (OMR and MIDI-to-audio) not only increases the F1 scores—indicating better note-level accuracy—but also reduces the FAD values, pointing to higher overall audio quality.</p>
+  
+  <br>
+    
+  <p>When comparing the multi-stage approach (trained on OMR + I2A + Midi2Audio) to the direct I2A methods, we see that its F1 scores are indeed higher, but the corresponding FAD value is also higher. In practice, this translates to more accurate note timing and pitch on paper, yet a noticeably lower perceptual quality—often manifesting as dissonant or “off-sounding” passages. The bottleneck mainly comes from the OMR errors. We found that errors in the OMR stage often result in perceptually obvious flaws, such as strong dissonance. This stems from a fundamental limitation of current OMR models: they are trained to optimize visual accuracy without any awareness of the downstream auditory impact. However, visually subtle errors—such as misreading an accidental or misclassifying a note by a semitone—can lead to musically severe consequences in the audio output. Since the model lacks any feedback from how its predictions will ultimately sound, it cannot learn to avoid such acoustically significant mistakes.</p>
+  
+  <br>
   
   <div class="h3-wrapper">
     <h3 id="i2a-ytsv-eval">Image-to-Audio (I2A) on YTSV-T11</h3>
@@ -270,12 +281,16 @@
 
   <br>
 
+  <p>Adding OMR and MIDI-to-audio tasks consistently boosts the direct I2A approach, resulting in higher F1 scores across all tolerance windows and notably lower FAD, indicating both improved note-level accuracy and better overall audio quality.</p>
+    
+  <br>
+
   <div class="h3-wrapper">
     <h3 id="m2a-eval">MIDI-to-Audio (M2A) on BPSD</h3>
     <span><a href="#eval">[top]</a></span>
   </div>
   
-  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation without DTW.</p>
+  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation without DTW; transcribing the generated audio into MIDI using Onsets-and-Frames model, and calculating F1 score between the generated-transcribed MIDI and the ground truth.</p>
 
   <div class="center-table">
     <table>
@@ -305,6 +320,10 @@
 
   <br>
 
+  <p>Incorporating additional tasks (OMR and Image-to-Audio) clearly boosts performance for MIDI-to-Audio: compared to the model trained solely on M2A, the multi-task variant achieves notably higher F1 scores—particularly at stricter tolerance windows—and substantially lower FAD, indicating both more precise note alignment and improved overall audio quality.</p>
+
+  <br>
+    
   <hr>
 
   <h2 id="toc">Inference Examples</h2>
