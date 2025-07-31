@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Unified Music Translation between Score Images, MusicXML, MIDI and Audio</title>
+    <title>Unified Cross-modal Translation of Score Images, Symbolic Music, and Performance Audio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/reset.css">
@@ -11,80 +11,9 @@
 <body>
 
 <div class="page-wrapper">
-  <h1>Unified Music Translation between Score Images, MusicXML, MIDI and Audio</h1>
+  <h1>Unified Cross-modal Translation of Score Images, Symbolic Music, and Performance Audio</h1>
 
   <p id="authors">Anonymous Submission</p>
-
-  <div class="response-wrapper">
-    <h2 id="response">Response to Reviewer MkS7</h2>
-    <p id="disclamer">We couldn't post the rebuttal for reviewer MkS7 before the author response deadline while trying to reduce down to fit the maximum length allowed in OpenReview. We sincerely apologize for this, and would like to post the response here instead.</p>
-
-    <p>We sincerely thank the reviewer for the detailed feedbacks and helpful suggestions. In overall, we acknowledge that many of our sentences overclaim without strong evidence, so we would revise those arguments as following the reviewer’s suggestion, along with clarifying the limitation of the proposed YTSV dataset.</p>
-
-    <quote>Also in the Abstract (L32 ff.), it is claimed that “a unified model trained on multiple translation tasks outperforms task-specific models,” but this is not entirely accurate based on the results provided in the paper. While I think that the claim holds true for OMR specifically, it is not so clear for AMT, while the other directions (i.e. XML-to-image, image-to-audio, and MIDI-to-audio) have no comparison at all.</quote>
-
-    <p>We added results for other tasks to compare with task-specific models, such as Image-to-audio-only, and MIDI-to-audio only. Due to the length limitation, we would like to ask reviewers to refer our respond to other reviewers. We’ll also modify our sentence to “a unified model trained on multiple translations tasks outperforms task-specific models on some tasks” to avoid overclaim.</p>
-    
-    <quote>Related to the above point is the image-to-audio task, for which it is claimed that “the model only trained for image-to-audio fails to generate meaningful audio” (L349, Col. 2). While this may be true, it should manifest in a drastic difference in the quantitative numbers reported in Table 3.</quote>
-    
-    <p>We appreciate the reviewer’s suggestion. We added additional quantitative evaluation results further down this demo page. The result from the image-to-audio-only model shows significant differences with other models. This suggests that encompassing other modality translations during training is essential for image-to-audio performance. </p>
-    
-    <quote>Is it better to train a single end-to-end/unified model or do we get the best performance if we split the task into smaller, more manageable sub-tasks? Or, is it really better to go from image directly to audio rather than to have an intermediate symbolic representation?</quote>
-    
-    <p>We acknowledge the reviewer’s criticism of the lack of comparison with multi-stage approaches. We have attached new comparisons between multi-stage and end-to-end strategies in image-to-audio generation, provided <a href="#i2a-bpsd-eval">here</a>.</p>
-    
-    <quote>For the AMT task, the addition of auxiliary tasks does not seem to improve performance, which is attributed to the already-sufficient extent of the audio-to-MIDI training data (L402 ff., Col. 2). This hypothesis could be tested by artificially reducing the audio-to-MIDI training data to an amount where the auxiliary data would be helpful.</quote>
-    
-    <p>We appreciate the reviewer’s suggestion. We are currently training a model only with MusicNet, and plan to revise our argument based on the updated experiment result.</p>
-
-    <quote>Table 4: If I understand correctly, the A2I model is barely better-than-random? </quote>
-
-    <p>We agree that SER was not effective for evaluating the performance of the current A2I model. We employed another metric, Earth Mover’s Distance, to compare token distributions between the generated sheet music and original images. The evaluation results are provided <a href="#a2i-eval">here</a>.</p>
-
-    <quote>L295, Col. 2: How many epochs does 600k batches correspond to?</quote>
-    <p>Below are brief calculations of epoch numbers in our full training setting. Please note that in the AMT datasets (MAESTRO, MusicNet, SLakh) the epoch number does not reflect that only a randomly sliced segment (10s or 20s) of data sample is used for each step. For example, the average audio length in MAESTRO is around 600 seconds, which means we may need at least 60 epochs to expect the full data to be involved in training. </p>
-    <p><strong>Trained on OMR + I2A + Midi2Audio</strong>: OLiMPiC 85.58 / GrandStaff 57.05 / YTSV-Piano 39.74 / MAESTRO 2285.42</p>
-    <p><strong>Trained on AMT + A2I + LMX2Img</strong>: MAESTRO 2765.78 / MusicNet 5531.56 / SLakh 1382.89 / OLiMPiC 56.66 / GrandStaff 45.33 / YTSV 15.16</p>
-
-
-    <quote>Questions For Authors:
-    > Details regarding filtering process (L206 ff.):
-    <ul>
-      <li>How are hand-written scores detected?</li>
-      <li>How are poor-quality scans and manipulated scores identified?</li>
-      <li>How (if at all) is deduplication handled?</li>
-      <li>Ideally covered in the appendix, but main text needs to refer to the relevant section</li>
-    </ul>
-    </quote>
-
-    <p>We first filtered out handwritten scores using thumbnails, and later applied systematic filtering with ResNet50 embeddings, t-SNE, and DBSCAN. Low-quality scans and manipulated scores (e.g., inverted colors, X marks) were excluded using pixel intensity thresholds and anomaly scores (Appendix A.5.1).
-    Regarding duplication, while some pages may repeat (e.g., musical repetitions or multiple versions of the same piece), we believe the risk is relatively low. YouTube reuploads are less common than image duplication, and we manually curated channels with mostly original content. Overlaps in famous repertoire likely reflect multiple performances of the same score rather than copied videos. We will include these details in the camera-ready version.</p>
-
-    <quote>How does a model know which modality to output?</quote>
-    <p>We add output modality-specific embeddings for every input token embedding, and the decoder’s START token is also modality specific. We will include this detail in the final revision.</p>
-
-    <quote>How is sample quality impacted if we do image-to-audio translation in multiple stages? I.e. how does F1 and FAD (Table 3) change if we leverage the unified model to first translate image->XML and then XML->audio?</quote>
-
-    <p>We added the suggested result in our response to Reviewer gn9S, and <a href="#i2a-bpsd-eval">this table</a>, denoted as “Multi Stage (Image-to-Xml to MIDI-to-Audio): Trained on OMR + I2A + M2A”. Although F1-score showed better results, FAD was significantly worse. One reason is that errors in OMR such as missing accidentals or mis-transcribed note pitches can lead to severe dissonance, while not affecting AMT F1-scores as much. We believe this is another advantage of the end-to-end approach, as it eliminates additional steps where error accumulation can occur.</p>
-
-    <quote>L121: “we mainly focus on automatic music transcription and optical music recognition, the key representative tasks in each direction” — Why are AMT and OMR the key representative tasks in each modality direction?</quote>
-
-    <p>AMT and OMR are "representative" in that they're the most fundamental tasks that identify and extract note information in each direction; they also have most well-established evaluation metrics. We could word this sentence again to be less assertive.</p>
-
-    <quote>Table 1 and the sentence right after disagree on the total number of videos: Is it 10,706 or 12,217?</quote>
-
-    <p>We apologize for this oversight. 12,217 is the right number. We will correct the sentence in the final revision.</p>
-
-    <quote>L298, Col. 2: What is the motivation for using a curriculum learning strategy? A priori, I would have concerns about loss of plasticity when adding a certain modality only part way through training. What would happen if we were to train on all modalities straight from the beginning?</quote>
-
-    <p>Following the reviewer’s suggestion, we ran additional experiments where we train on all modalities straight from the beginning. Here, the training loss suddenly explodes at around 150k steps. The validation metrics (loss of each modality and OMR SER) were all worse as well.</p>
-
-    <quote>Which tasks and datasets is the A2I model from Section 6.2 trained on?</quote>
-
-    <p>The model was trained with the entire YTSV dataset that includes chamber music.</p>
-
-  
-  </div>
 
   <p id="abstract">Abstract</p>
   <p>
@@ -92,238 +21,19 @@
   </p>
 
   <hr>
+  <h2>Model Directions</h2>
+  <div id="figure-wrapper_full">
+    <img src="umut-model.png"/>
+  </div>
+  <p>
+    Overview of our proposed unified multimodal translation framework. We employ a single Transformer encoder-decoder model for each direction—one for <em>Image-to-Audio direction</em> (I2A) tasks and another for <em>Audio-to-Image direction</em> (A2I) tasks. Each model jointly handles multiple translation tasks. All modalities are discretised into token sequences, enabling end-to-end, multitask training entirely at the token level. Importantly, multitask training leads to synergistic improvements across tasks, rather than degrading performance. Note that we train separate models for I2A and A2I directions; the two directions do not share weights.
+  </p>
+  <hr>
   <h2>Model Structure</h2>
   <div id="figure-wrapper_full">
-    <img src="umut-structure_half.png"/>
+    <img src="umut-structure_cmyk_half.png"/>
   </div>
 
-  <hr>
-
-  <h2 id="eval">Additional Evaluation</h2>
-  <p>Following initial submission, we performed additional evaluation in Image-to-Audio, Audio-to-Image, and MIDI-to-Audio to provide more quantitative metrics for each task.</p>
-
-  <div class="h3-wrapper">
-    <h3 id="a2i-eval">Audio-to-Image (A2I)</h3>
-    <span><a href="#eval">[top]</a></span>
-  </div>
-
-  <p>A2I results from three different models, evaluated with Earth Mover's Distance (EMD). This compares how similar the pitch and duration tokens' distributions are with the ground truth distribution. LMX tokens were predicted from generated images using the Zeus OMR model.</p>
-
-  <div class="center-table">
-    <table>
-      <tr>
-        <th class="label-lg bb">Model Description</th>
-        <th class="label-lg bb">EMD Pitch</th>
-        <th class="label-lg bb">EMD Duration</th>
-      </tr>
-      <tr>
-        <td>A2I: Trained on A2I only</td>
-        <td class="right">4.644</td>
-        <td class="right">0.484</td>
-      </tr>
-      <tr>
-        <td>A2I: Trained on AMT + A2I</td>
-        <td class="right">2.888</td>
-        <td class="right">0.438</td>
-      </tr>
-      <tr>
-        <td class="bb">A2I: Trained on AMT + A2I + LMX2Img</td>
-        <td class="right bb"><strong>2.635</strong></td>
-        <td class="right bb"><strong>0.432</strong></td>
-      </tr>
-      <tr>
-        <td>RQVAE Reconstruction</td>
-        <td class="right">0.899</td>
-        <td class="right">0.130</td>
-      </tr>
-      <tr>
-        <td>Ground Truth Image</td>
-        <td class="right">0.486</td>
-        <td class="right">0.111</td>
-      </tr>
-      <tr>
-        <td>Ground Truth Image Mismatched pairs</td>
-        <td class="right">3.492</td>
-        <td class="right">0.994</td>
-      </tr>
-    </table>
-  </div>
-
-  <br>
-    
-  <p>As additional tasks—such as AMT and LMX-to-Image—are incorporated into the training, the model’s performance continues to improve, suggesting that expanding the task scope has a synergistic effect on achieving more accurate pitch and duration distributions compared to the ground truth.</p>
-  
-  <br>
-
-  <div class="h3-wrapper">
-    <h3 id="i2a-bpsd-eval">Image-to-Audio (I2A) on BPSD</h3>
-    <span><a href="#eval">[top]</a></span>
-  </div>
-
-  <p>I2A results from five strategies on the Beethoven Piano Sonata Dataset (BPSD). To quantitatively evaluate I2A performance, we transcribe the output audio with the Onsets and Frames model, align the transcribed frames with ground truth MIDI using DTW, and assess F1-scores across 3 different tolerance windows (e.g., a tolerance of 0.1 means that a predicted note is considered correct if it falls within ±0.1 seconds of the ground truth). We also use Frechet Audio Distance (FAD) as a general audio quality metric.</p>
-
-  <br>
-
-  <p>In the "multi stage" strategies (Image → MusicXML → MIDI → Audio), the intermediate modalities need to be translated. In the first (upper) experiment, we convert our model's OMR output (in MusicXML) to MIDI using conventional notation software and only use our own model for translation; in the second (lower) experiment, we employ existing pre-trained models to perform each translation step: Zeus for OMR, VirtuosoNet for performance modeling, and Music Spectrogram Diffusion for audio synthesis.</p>
-
-  <br>
-
-  <div class="center-table">
-    <table>
-      <tr>
-        <th class="label-lg bb">Model Description</th>
-        <th class="label-lg bb">F1 (DTW) 0.05</th>
-        <th class="label-lg bb">F1 (DTW) 0.1</th>
-        <th class="label-lg bb">F1 (DTW) 0.2</th>
-        <th class="label-lg bb">FAD</th>
-      </tr>
-      <tr>
-        <td>Direct I2A: Trained on I2A only</td>
-        <td class="right">23.49</td>
-        <td class="right">34.51</td>
-        <td class="right">44.15</td>
-        <td class="right">0.422</td>
-      </tr>
-      <tr>
-        <td>Direct I2A: Trained on OMR + I2A</td>
-        <td class="right">48.67</td>
-        <td class="right">64.30</td>
-        <td class="right">74.01</td>
-        <td class="right">0.098</td>
-      </tr>
-      <tr>
-        <td>Direct I2A: Trained on OMR + I2A + Midi2Audio</td>
-        <td class="right">48.36</td>
-        <td class="right">64.63</td>
-        <td class="right">74.92</td>
-        <td class="right"><strong>0.081</strong></td>
-      </tr>
-      <tr>
-        <td>Multi Stage: Trained on OMR + I2A + Midi2Audio</td>
-        <td class="right"><strong>50.91</strong></td>
-        <td class="right"><strong>70.40</strong></td>
-        <td class="right"><strong>79.96</strong></td>
-        <td class="right">0.137</td>
-      </tr>
-      <tr>
-        <td class="bb">Multi Stage: Zeus → VirtuosoNet → MSD</td>
-        <td class="right bb">45.52</td>
-        <td class="right bb">59.35</td>
-        <td class="right bb">69.36</td>
-        <td class="right bb">0.330</td>
-      </tr>
-      <tr>
-        <td class="bb">DAC Reconstruction</td>
-        <td class="right">68.83</td>
-        <td class="right">82.39</td>
-        <td class="right">87.47</td>
-        <td class="right">0.050</td>
-      </tr>
-    </table>
-  </div>
-
-  <br>
-    
-  <p>Comparing the three Direct I2A approaches, we see that adding more tasks (OMR and MIDI-to-audio) not only increases the F1 scores—indicating better note-level accuracy—but also reduces the FAD values, pointing to higher overall audio quality.</p>
-  
-  <br>
-    
-  <p>When comparing the multi-stage approach (trained on OMR + I2A + Midi2Audio) to the direct I2A methods, we see that its F1 scores are indeed higher, but the corresponding FAD value is also higher. In practice, this translates to more accurate note timing and pitch on paper, yet a noticeably lower perceptual quality—often manifesting as dissonant or “off-sounding” passages. The bottleneck mainly comes from the OMR errors. We found that errors in the OMR stage often result in perceptually obvious flaws, such as strong dissonance. This stems from a fundamental limitation of current OMR models: they are trained to optimize visual accuracy without any awareness of the downstream auditory impact. However, visually subtle errors—such as misreading an accidental or misclassifying a note by a semitone—can lead to musically severe consequences in the audio output. Since the model lacks any feedback from how its predictions will ultimately sound, it cannot learn to avoid such acoustically significant mistakes.</p>
-  
-  <br>
-  
-  <div class="h3-wrapper">
-    <h3 id="i2a-ytsv-eval">Image-to-Audio (I2A) on YTSV-T11</h3>
-    <span><a href="#eval">[top]</a></span>
-  </div>
-
-  <p>I2A results from three strategies on our YTSV-T11 dataset. We take a similar approach as with BPSD, but only perform direct I2A since the dataset lacks ground-truth symbolic labels.</p>
-
-  <div class="center-table">
-    <table>
-      <tr>
-        <th class="label-lg bb">Model Description</th>
-        <th class="label-lg bb">F1 (DTW) 0.05</th>
-        <th class="label-lg bb">F1 (DTW) 0.1</th>
-        <th class="label-lg bb">F1 (DTW) 0.2</th>
-        <th class="label-lg bb">FAD</th>
-      </tr>
-      <tr>
-        <td>Direct I2A: Trained on I2A only</td>
-        <td class="right">27.05</td>
-        <td class="right">43.32</td>
-        <td class="right">53.02</td>
-        <td class="right">0.317</td>
-      </tr>
-      <tr>
-        <td>Direct I2A: Trained on OMR + I2A</td>
-        <td class="right">51.60</td>
-        <td class="right">67.92</td>
-        <td class="right">75.98</td>
-        <td class="right">0.056</td>
-      </tr>
-      <tr>
-        <td class="bb">Direct I2A: Trained on OMR + I2A + Midi2Audio</td>
-        <td class="right bb"><strong>52.66</strong></td>
-        <td class="right bb"><strong>68.45</strong></td>
-        <td class="right bb"><strong>76.24</strong></td>
-        <td class="right bb"><strong>0.055</strong></td>
-      </tr>
-      <tr>
-        <td>DAC Reconstruction</td>
-        <td class="right">82.28</td>
-        <td class="right">86.43</td>
-        <td class="right">88.76</td>
-        <td class="right">0.035</td>
-      </tr>
-    </table>
-  </div>
-
-  <br>
-
-  <p>Adding OMR and MIDI-to-audio tasks consistently boosts the direct I2A approach, resulting in higher F1 scores across all tolerance windows and notably lower FAD, indicating both improved note-level accuracy and better overall audio quality.</p>
-    
-  <br>
-
-  <div class="h3-wrapper">
-    <h3 id="m2a-eval">MIDI-to-Audio (M2A) on BPSD</h3>
-    <span><a href="#eval">[top]</a></span>
-  </div>
-  
-  <p>M2A results from two strategies on the Beethoven Piano Sonata Dataset (BPSD). We take a similar approach as in Image-to-Audio evaluation without DTW; transcribing the generated audio into MIDI using Onsets-and-Frames model, and calculating F1 score between the generated-transcribed MIDI and the ground truth.</p>
-
-  <div class="center-table">
-    <table>
-      <tr>
-        <th class="label-lg bb">Model Description</th>
-        <th class="label-lg bb">F1 0.05</th>
-        <th class="label-lg bb">F1 0.1</th>
-        <th class="label-lg bb">F1 0.2</th>
-        <th class="label-lg bb">FAD</th>
-      </tr>
-      <tr>
-        <td>M2A: Trained on MIDI2Audio only</td>
-        <td class="right">26.61</td>
-        <td class="right">64.86</td>
-        <td class="right"><strong>88.20</strong></td>
-        <td class="right">0.201</td>
-      </tr>
-      <tr>
-        <td class="bb">M2A: Trained on OMR + Image2Audio + MIDI2Audio</td>
-        <td class="right bb"><strong>45.91</strong></td>
-        <td class="right bb"><strong>69.54</strong></td>
-        <td class="right bb">84.55</td>
-        <td class="right bb"><strong>0.116</strong></td>
-      </tr>
-    </table>
-  </div>
-
-  <br>
-
-  <p>Incorporating additional tasks (OMR and Image-to-Audio) clearly boosts performance for MIDI-to-Audio: compared to the model trained solely on M2A, the multi-task variant achieves notably higher F1 scores—particularly at stricter tolerance windows—and substantially lower FAD, indicating both more precise note alignment and improved overall audio quality.</p>
-
-  <br>
-    
   <hr>
 
   <h2 id="toc">Inference Examples</h2>
