@@ -15,7 +15,7 @@
 
   <p id="authors">Anonymous Submission</p>
 
-  <p id="abstract">Abstract</p>
+<!--   <p id="abstract">Abstract</p> -->
   <p>
     Music exists in various modalities, such as score images, symbolic scores, MIDI, and audio. Translations between each modality are established as core tasks of music information retrieval, such as automatic music transcription (audio-to-MIDI) and optical music recognition (score image to symbolic score). However, most past work on multimodal translation trains specialized models on individual translation tasks. Here, we propose a unified approach, where we train a general-purpose model on many translation tasks simultaneously. The viability of this approach is enabled by our newly presented 1,300 hours of paired audio-score image data collected from YouTube videos, which is an order of magnitude larger than any existing music modal translation datasets. By tokenizing continuous modalities like score images and audio using discrete autoencoders, we treat modal translation between images, music notation, MIDI, and audio as a discrete seq2seq problem and train a single encoder-decoder Transformer model. Our experimental results demonstrate that a unified model trained on multiple translation tasks outperforms task-specific models. Notably, our approach achieves the first successful score-image-conditioned audio generation, marking a significant breakthrough in cross-modal music generation. Additionally, our model achieves state-of-the-art performance in optical music recognition, showing the effectiveness of our unified framework.
   </p>
